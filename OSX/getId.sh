@@ -31,24 +31,6 @@ else
   echo "USB Device${GREEN} OK ${NOCOLOR} ${USBD}"
 fi
 
-# removes previous version of the luftdaten firmware, to make sure you always have the latest version
-rm -f ./latest_en.bin
-
-# Downloading the latest firmware via curl
-echo "Downloading firmware"
-curl -O "https://www.madavi.de/sensor/update/data/latest_en.bin" --progress-bar
-echo "Firmware  ${GREEN} OK ${NOCOLOR}"
-
 # flashing the firmware to the ESP8266
-echo "Flashing firmware to ${USBD}"
-~/Library/Arduino15/packages/esp8266/tools/esptool/0.4.9/esptool -v -cd nodemcu -cb 57600 -ca 0x00000 -cp ${USBD} -cf ./latest_en.bin
-
-# removes the luftdaten firmware
-rm -f ./latest_en.bin
-
-# opens up your serial console this only works if you have platformio installed
-if type "pio" > /dev/null; then
-  pio device monitor --port ${USBD}
-else
-  echo you need to install platformio cli
-fi
+echo "Requestig the chip Id of the ESP on port ${USBD}"
+~/Library/Arduino15/packages/esp8266/tools/esptool/0.4.9/esptool --port ${USBD} chip_id
